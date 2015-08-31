@@ -26,6 +26,7 @@ $cloudapi = CloudApiClient::factory(array(
 // Set up other required variables.
 $environment = getenv('ACQUIA_CLOUD_ENVIRONMENT');
 $site = getenv('ACQUIA_CLOUD_SITENAME');
+$destination = getenv('ACQUIA_CLOUD_DATABASE_DESTINATION');
 
 // Create a database backup (wait for completion).
 update_console('Backing up database in ' . $environment . ' environment...');
@@ -37,7 +38,7 @@ if (wait_for_task_to_complete($cloudapi, 'devcloud:' . $site, $backup->id())) {
   $bid = $result->backupid;
 }
 
-$download = $cloudapi->downloadDatabaseBackup('devcloud:' . $site, $environment, $site, $bid, 'test.sql.gz');
+$download = $cloudapi->downloadDatabaseBackup('devcloud:' . $site, $environment, $site, $bid, $destination . 'ac-dump.sql.gz');
 
 /**
  * Pause until a given task is completed.
